@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <title>Cake Shop</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="./logo.jpeg" width="auto" height="100"
+                 class="d-inline-block align-top" alt="Logo"/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/shop}">Shop</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">Login</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/cart}">Cart</a>
+                </li>
+                <li class="nav-item active">
+                    <span class="nav-link" th:text="${cartCount}">0</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2>Upload a New Cake</h2>
+    <form th:action="@{/uploadCake}" method="post" enctype="multipart/form-data" class="mb-4">
+        <div class="form-group">
+            <label for="cakeName">Cake Name</label>
+            <input type="text" id="cakeName" name="name" class="form-control" placeholder="Enter cake name" required>
+        </div>
+        <div class="form-group">
+            <label for="cakeDescription">Description</label>
+            <textarea id="cakeDescription" name="description" class="form-control" placeholder="Enter description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="cakePrice">Price</label>
+            <input type="number" id="cakePrice" name="price" class="form-control" placeholder="Enter price" required>
+        </div>
+        <div class="form-group">
+            <label for="cakeImage">Upload Image</label>
+            <input type="file" id="cakeImage" name="image" class="form-control" accept="image/*" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload Cake</button>
+    </form>
+
+    <h2>Available Cakes</h2>
+    <div class="row">
+        <!-- Example Cake Display (Loop through cakes in your database) -->
+        <div class="col-md-4" th:each="cake : ${cakes}">
+            <div class="card mb-4">
+                <img src="./blog-img2.png" class="card-img-top" alt="Cake Image" width="10" height="300">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${cake.name}">Fruit cake</h5>
+                    <p class="card-text" th:text="${cake.description}">					Classic Fruit Cake
+					A rich, moist cake packed with raisins, cherries, and candied citrus, perfectly spiced and deliciously sweet—a timeless treat for any occasion.</p>
+                    <p class="card-text"><strong>$<span th:text="${cake.price}">19.00</span></strong></p>
+                    <form th:action="@{/buyCake}" method="post" class="d-inline">
+                        <input type="hidden" name="cakeId" th:value="${cake.id}">
+                        <button type="submit" class="btn btn-success">Buy Cake</button>
+                    </form>
+                    <form th:action="@{/deleteCake}" method="post" class="d-inline">
+                        <input type="hidden" name="cakeId" th:value="${cake.id}">
+                        <button type="submit" class="btn btn-danger">Delete Cake</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End Example Cake Display -->
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2poT1UjOe4mOJbk5dNfH0IfQ5AL7kzv9/9vo0Uj8y2p7ig9lL7Lr2" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-a5iJTOm3QdI0yQz3MX7DX9oK8VOpH7rVZ9ZZpJNTOMqMFlJXxJApKKY7T1hOhPp6" crossorigin="anonymous"></script>
+</body>
+</html>
